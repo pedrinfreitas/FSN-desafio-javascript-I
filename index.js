@@ -7,43 +7,54 @@ const alunosDaEscola=[
     {nome:"Carlos",notas:[],cursos:[],faltas:0},
     {nome:"Lucca",notas:[10,9.8,9.6],cursos:[{nomeDoCurso:"UX",dataMatricula:new Date}],faltas:0}
 ];
-
+ const msgSuccess = " :) Aluno Adicionado com sucesso", msgError = " :( Ops... Já existe esse aluno cadastrado!";
 
 // implementação
-function adicionarAluno(nome:string){
- 
+/* Por meio dessa função, podemos pesquisar um aluno por nome na lista de aluno. Ela deverá exibir um feedback, 
+tanto para quando encontrar o aluno, tanto quando não encontrar. E deverá devolver um aluno em seu retorno. */
+const buscarAluno = aluno => (alunosDaEscola.findIndex(x => x.nome == aluno) !== -1) ? msgError : msgSuccess ;
+
 /*Essa função irá receber uma *string* que é nome do aluno a ser criado. 
 E seguindo o modelo de aluno, o mesmo deverá ser inserido na lista de alunos.
 A função deve devolver um feedback de sucesso, caso o aluno seja inserido corretamente.*/
+const adicionarAluno = aluno => {
+    const msgAtual = buscarAluno(aluno);
+    (msgAtual === msgSuccess) ? alunosDaEscola.push({ nome: aluno, cursos: []}): "";
+    return (msgAtual);
 }
 
-function listarAlunos(){
-/*Com essa função o usuário poderá ver todos os alunos cadastrados atualmente no sistema. 
-Vale dizer que As informações deverão ser exibidas em um formato amigável.*/
-}
-function buscarAluno(nome:string){
-/* Por meio dessa função, podemos pesquisar um aluno por nome na lista de aluno. Ela deverá exibir um feedback, tanto para quando encontrar o aluno, tanto quando não encontrar. E deverá devolver um aluno em seu retorno. */
-}
-function matricularAluno(aluno:object, curso:string){
-/* Essa funcionalidade irá permitir, cadastrar um aluno em um curso. 
-Essa função só poderá ser executada em um aluno já devidamente cadastrado no sistema, e deverá armazenar a data atual no momento da matricula
-Lembre-se de exibir o feedback para o usuário. */
-}
-function aplicarFalta(aluno:object){
-/*
-    Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá incrementar uma falta ao aluno. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar falta em aluno se o mesmo tiver matriculado em um curso.
-*/
-}
+adicionarAluno("Henrique");
+adicionarAluno("Pedro");
+adicionarAluno("Bruno Old");
 
-function aplicarNota(aluno:object){
-/*
-    Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá adicionar uma nota ao aluno na sua lista de notas. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar nota em aluno se o mesmo tiver matriculado em um curso.
-*/
-}
+//console.log(alunosDaEscola);
 
-function aprovarAluno(aluno:object){
-/* 
-Ao receber um aluno devidamente cadastrado em nossa lista, deverá dizer se o mesmo está aprovado ou não. Os critérios de aprovação são: ter no máximo 3 faltas e média 7 em notas.
-Só o aluno só poderá ser aprovado se o mesmo tiver matriculado em um curso.
-*/
-}
+
+// function listarAlunos(){
+// /*Com essa função o usuário poderá ver todos os alunos cadastrados atualmente no sistema. 
+// Vale dizer que As informações deverão ser exibidas em um formato amigável.*/
+// }
+
+// function matricularAluno(aluno:object, curso:string){
+// /* Essa funcionalidade irá permitir, cadastrar um aluno em um curso. 
+// Essa função só poderá ser executada em um aluno já devidamente cadastrado no sistema, e deverá armazenar a data atual no momento da matricula
+// Lembre-se de exibir o feedback para o usuário. */
+// }
+// function aplicarFalta(aluno:object){
+// /*
+//     Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá incrementar uma falta ao aluno. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar falta em aluno se o mesmo tiver matriculado em um curso.
+// */
+// }
+
+// function aplicarNota(aluno:object){
+// /*
+//     Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá adicionar uma nota ao aluno na sua lista de notas. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar nota em aluno se o mesmo tiver matriculado em um curso.
+// */
+// }
+
+// function aprovarAluno(aluno:object){
+// /* 
+// Ao receber um aluno devidamente cadastrado em nossa lista, deverá dizer se o mesmo está aprovado ou não. Os critérios de aprovação são: ter no máximo 3 faltas e média 7 em notas.
+// Só o aluno só poderá ser aprovado se o mesmo tiver matriculado em um curso.
+// */
+// }
