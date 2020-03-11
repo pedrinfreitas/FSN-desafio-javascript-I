@@ -7,54 +7,133 @@ const alunosDaEscola=[
     {nome:"Carlos",notas:[],cursos:[],faltas:0},
     {nome:"Lucca",notas:[10,9.8,9.6],cursos:[{nomeDoCurso:"UX",dataMatricula:new Date}],faltas:0}
 ];
- const msgSuccess = " :) Aluno Adicionado com sucesso", msgError = " :( Ops... Já existe esse aluno cadastrado!";
 
-// implementação
-/* Por meio dessa função, podemos pesquisar um aluno por nome na lista de aluno. Ela deverá exibir um feedback, 
-tanto para quando encontrar o aluno, tanto quando não encontrar. E deverá devolver um aluno em seu retorno. */
-const buscarAluno = aluno => (alunosDaEscola.findIndex(x => x.nome == aluno) !== -1) ? msgError : msgSuccess ;
+ const 
+    msginfo    = ";) Aluno: ", 
+    msgSuccess = ":) Aluno Adicionado com sucesso! ", 
+    msgError   = ":( Ops... Aluno não cadastrado! ",
+    msgErrorCheck = ":( Ops... Aluno ja cadastrado! ",
+    marcacao   = "-".repeat(120);
 
-/*Essa função irá receber uma *string* que é nome do aluno a ser criado. 
-E seguindo o modelo de aluno, o mesmo deverá ser inserido na lista de alunos.
-A função deve devolver um feedback de sucesso, caso o aluno seja inserido corretamente.*/
-const adicionarAluno = aluno => {
-    const msgAtual = buscarAluno(aluno);
-    (msgAtual === msgSuccess) ? alunosDaEscola.push({ nome: aluno, cursos: []}): "";
-    return (msgAtual);
+const alunoExiste = valor => (alunosDaEscola.findIndex(x => x.nome == valor));
+const cursoExiste = valor => (alunosDaEscola[valor].cursos[0] !== undefined );
+const mediaNotas  = notas => notas.reduce((soma, elem) => soma + elem, 0) / notas.length;
+
+// const pegarKeys = () => (Object.keys(alunosDaEscola[0]));
+//[ 'nome', 'notas', 'cursos', 'faltas' ]
+
+const buscarAluno = nomeAluno => {
+    let busca = alunosDaEscola.find(x => x.nome == nomeDoAluno);
+    return (busca) ? msginfo + busca : msgError;
 }
 
-adicionarAluno("Henrique");
-adicionarAluno("Pedro");
-adicionarAluno("Bruno Old");
+// console.lo(buscarAluno("Bruno"));
+// console.lo(buscarAluno("Pedro"));
 
+const adicionarAluno = nomeAluno => { 
+    const modeloAluno = {nome:nomeAluno,notas:[],cursos:[],faltas:0};  
+    let msgAtual = msgSuccess;
+    (alunoExiste(nomeAluno) !== -1) 
+        ? msgAtual = msgErrorCheck
+        : alunosDaEscola.push(modeloAluno);
+    return msgAtual;
+}
+
+// console.log(adicionarAluno("Henrique"));
+// console.log(adicionarAluno("Pedro"));
+// console.log(adicionarAluno("Bruno Old"));
 //console.log(alunosDaEscola);
 
+const listarAlunos = ()=> {
+    let inicioEFim = `${("-".repeat(105))} \n`, lista = inicioEFim;
+    for (const aluno of alunosDaEscola) {
+        lista += `Nome: ${aluno.nome} ${"-".repeat(12-aluno.nome.length)} | `;                 
+        lista += `Notas: ${aluno.notas} ${"-".repeat(15-JSON.stringify(aluno.notas).length)} | `;
+        lista += `Faltas: ${aluno.faltas} ${"-".repeat(3-JSON.stringify(aluno.faltas).length)} |`;
 
-// function listarAlunos(){
-// /*Com essa função o usuário poderá ver todos os alunos cadastrados atualmente no sistema. 
-// Vale dizer que As informações deverão ser exibidas em um formato amigável.*/
-// }
+        for (const curso of aluno.cursos) {
+            lista += ` Curso: ${curso.nomeDoCurso} ${"-".repeat(15-curso.nomeDoCurso.length)} | `;  
+            lista += `Data: ${curso.dataMatricula.toLocaleDateString()}`;  
+        } 
 
-// function matricularAluno(aluno:object, curso:string){
-// /* Essa funcionalidade irá permitir, cadastrar um aluno em um curso. 
-// Essa função só poderá ser executada em um aluno já devidamente cadastrado no sistema, e deverá armazenar a data atual no momento da matricula
-// Lembre-se de exibir o feedback para o usuário. */
-// }
-// function aplicarFalta(aluno:object){
-// /*
-//     Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá incrementar uma falta ao aluno. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar falta em aluno se o mesmo tiver matriculado em um curso.
-// */
-// }
+        lista += `\n`;
+    }
+    return console.log(lista += inicioEFim);
+}
 
-// function aplicarNota(aluno:object){
-// /*
-//     Ao receber um aluno devidamente cadastrado em nossa lista. Você deverá adicionar uma nota ao aluno na sua lista de notas. Você deverá dar um feedback ao concluir a tarefa. Só poderá aplicar nota em aluno se o mesmo tiver matriculado em um curso.
-// */
-// }
+// console.log(listarAlunos());
 
-// function aprovarAluno(aluno:object){
-// /* 
-// Ao receber um aluno devidamente cadastrado em nossa lista, deverá dizer se o mesmo está aprovado ou não. Os critérios de aprovação são: ter no máximo 3 faltas e média 7 em notas.
-// Só o aluno só poderá ser aprovado se o mesmo tiver matriculado em um curso.
-// */
-// }
+const matricularAluno = (nomeAluno, curso)=> { 
+    let msgAtual = `Aluno ${nomeAluno} Matriculado com sucesso em ${curso}`;
+    let i = alunoExiste(nomeAluno);
+
+    (i == -1) 
+        ? msgAtual = msgError
+        : alunosDaEscola[i].cursos.push({ nomeDoCurso: curso, dataMatricula: new Date });
+    
+    return msgAtual;
+}
+
+//  console.log(matricularAluno("Pedro","Artes"));
+//  console.log(matricularAluno("Bruno","Artes"));
+
+const aplicarFalta = (nomeAluno)=> {
+    let msgAtual = `Aluno ${nomeAluno} recebeu falta! \n`;
+    let i = alunoExiste(nomeAluno);
+    let matricula = (i !== -1 ) ? cursoExiste(i) : false;
+
+    (i == -1) 
+        ? msgAtual = msgError 
+        : (!matricula) 
+            ? msgAtual = `Aluno: ${nomeAluno} não está matriculado em nenhum curso`
+            : alunosDaEscola[i].faltas += 1;
+   
+    return msgAtual;
+}
+
+// console.log(aplicarFalta("Bruno"));
+// console.log(aplicarFalta("Pedro"));
+// console.log(aplicarFalta("Lucca"));
+
+const aplicarNota = (nomeAluno, nota)=> {
+    let msgAtual = `Aluno ${nomeAluno} recebeu a Nota ${nota}! \n`;
+    let i = alunoExiste(nomeAluno);
+    let matricula = (i !== -1 ) ? cursoExiste(i) : false;
+
+    (i == -1) 
+        ? msgAtual = msgError 
+        : (!matricula) 
+            ? msgAtual = `Aluno: ${nomeAluno} não está matriculado em nenhum curso`
+            : alunosDaEscola[i].notas.push(nota);
+   
+    return msgAtual;
+}
+
+// console.log(aplicarNota("Bruno", 8));
+// console.log(aplicarNota("Pedro", 8));
+// console.log(aplicarNota("Lucca", 8));
+
+
+const aprovarAluno = (nomeAluno)=> {
+    let msgAtual = msgError;
+    let i = alunoExiste(nomeAluno);
+
+    if (i == -1) return msgAtual;
+
+    let matricula = (i !== -1 ) ? cursoExiste(i) : false;
+   
+    let media = (mediaNotas(alunosDaEscola[i].notas)).toFixed(2);
+    let qtdeFaltas = alunosDaEscola[i].faltas;
+
+    (!matricula) 
+        ? msgAtual = `Aluno: ${nomeAluno} não está matriculado em nenhum curso`
+        : (media >= 7 && qtdeFaltas <= 3)
+            ? msgAtual = `Aluno: ${nomeAluno} APROVADO!`
+            : msgAtual = `Aluno: ${nomeAluno} REPROVADO!`;
+
+    return msgAtual;
+  };
+  
+//   console.log(aprovarAluno('Pedro'));
+//   console.log(aprovarAluno('Bruno'));
+  console.log(aprovarAluno('Guilherme'));
